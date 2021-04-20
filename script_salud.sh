@@ -11,9 +11,14 @@
 
 mkdir carpeta_covid
 cd carpeta_covid
-curl -O http://datosabiertos.salud.gob.mx/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip
-unzip datos_abiertos_covid19
-csvcut -c 6,13,14,16,22,23,24,25,27,28,30,36 210418COVID19MEXICO.csv > factores_de_riesgo.csv 
+curl  http://datosabiertos.salud.gob.mx/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip -o datos_covid.zip
+unzip datos_covid.zip
+datos=$(ls *.csv)
+csvcut -c 6,13,14,16,22,23,24,25,27,28,30,36 $datos > factores_de_riesgo.csv 
+echo "Columnas filtradas con exito..."
+echo "Creando archivos de confirmados, negativos y fallecidos.."
+echo "Puede tardar 4 mins aprox..."
 csvgrep -c 12 -r [123] factores_de_riesgo.csv > confirmados_factores_de_riesgo.csv
 csvgrep -i -c 12 -r [123] factores_de_riesgo.csv > negativos_factores_de_riesgo.csv
 csvgrep -i -c 2 -m '9999-99-99' factores_de_riesgo.csv > fallecidos_factores_de_riesgo.csv
+echo "Done"
